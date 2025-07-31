@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Location Comparison Checklist</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .locations-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .location-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 2px solid #e9ecef;
+        }
+
+        .location-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        .location-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #3498db;
+        }
+
+        .location-name {
+            flex: 1;
+            margin-right: 15px;
+        }
+
+        .location-name input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: border-color 0.3s ease;
+        }
+
+        .location-name input:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+
+        .total-score {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            min-width: 120px;
+        }
+
+        .criteria-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .criteria-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .criteria-item:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .criteria-label {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .score-options {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .score-option {
+            flex: 1;
+            min-width: 60px;
+        }
+
+        .score-option input[type="radio"] {
+            display: none;
+        }
+
+        .score-option label {
+            display: block;
+            padding: 10px 8px;
+            background: #ecf0f1;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            border: 2px solid transparent;
+        }
+
+        .score-option input[type="radio"]:checked + label {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            transform: scale(1.05);
+            border-color: #2574a9;
+        }
+
+        .score-option label:hover {
+            background: #d5dbdb;
+            transform: translateY(-2px);
+        }
+
+        .score-option input[type="radio"]:checked + label:hover {
+            background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+        }
+
+        .add-location-btn {
+            display: block;
+            width: 200px;
+            margin: 30px auto;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-location-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3);
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .remove-btn:hover {
+            background: #c0392b;
+            transform: scale(1.1);
+        }
+
+        .location-card {
+            position: relative;
+        }
+
+        @media (max-width: 768px) {
+            .locations-container {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .score-options {
+                justify-content: center;
+            }
+            
+            .score-option {
+                min-width: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Business Location Comparison</h1>
+            <p>Rate each criterion from 1 (Poor) to 5 (Excellent) to compare locations</p>
+        </div>
+        
+        <div class="locations-container" id="locationsContainer">
+            <!-- Locations will be added here -->
+        </div>
+        
+        <button class="add-location-btn" onclick="addLocation()">+ Add Location</button>
+    </div>
+
+    <script>
+        let locationCount = 0;
+
+        const criteria = [
+            { id: 'location', label: 'Location Quality' },
+            { id: 'cost', label: 'Cost per Year' },
+            { id: 'renovation', label: 'Renovation Needs (Reverse Score)' },
+            { id: 'experience', label: 'Overall Experience/Feel' },
+            { id: 'warehouse', label: 'Warehouse Space' },
+            { id: 'office', label: 'Office Space' },
+            { id: 'function', label: 'Function Space' },
+            { id: 'parking', label: 'Parking Availability' },
+            { id: 'roller_door', label: 'Roller Door Access' },
+            { id: 'van_access', label: 'Van Access' },
+            { id: 'forklift_access', label: 'Forklift Access' }
+        ];
+
+        function addLocation() {
+            locationCount++;
+            const locationId = `location_${locationCount}`;
+            
+            const locationCard = document.createElement('div');
+            locationCard.className = 'location-card';
+            locationCard.innerHTML = `
+                <button class="remove-btn" onclick="removeLocation(this)" title="Remove Location">×</button>
+                <div class="location-header">
+                    <div class="location-name">
+                        <input type="text" placeholder="Enter location name..." onchange="updateLocationName(this, '${locationId}')">
+                    </div>
+                    <div class="total-score" id="total_${locationId}">
+                        <div>Total Score</div>
+                        <div style="font-size: 1.4rem; margin-top: 5px;">0/55</div>
+                    </div>
+                </div>
+                <div class="criteria-grid">
+                    ${criteria.map(criterion => `
+                        <div class="criteria-item">
+                            <div class="criteria-label">${criterion.label}</div>
+                            <div class="score-options">
+                                ${[1, 2, 3, 4, 5].map(score => `
+                                    <div class="score-option">
+                                        <input type="radio" id="${criterion.id}_${locationId}_${score}" name="${criterion.id}_${locationId}" value="${score}" onchange="updateScore('${locationId}')">
+                                        <label for="${criterion.id}_${locationId}_${score}">${score}</label>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            document.getElementById('locationsContainer').appendChild(locationCard);
+        }
+
+        function removeLocation(button) {
+            if (document.querySelectorAll('.location-card').length > 1) {
+                button.parentElement.remove();
+            } else {
+                alert('You must have at least one location to compare.');
+            }
+        }
+
+        function updateScore(locationId) {
+            let totalScore = 0;
+            
+            criteria.forEach(criterion => {
+                const selectedRadio = document.querySelector(`input[name="${criterion.id}_${locationId}"]:checked`);
+                if (selectedRadio) {
+                    let score = parseInt(selectedRadio.value);
+                    // Reverse score for renovation needs (less renovation needed = better score)
+                    if (criterion.id === 'renovation') {
+                        score = 6 - score;
+                    }
+                    totalScore += score;
+                }
+            });
+            
+            const totalElement = document.getElementById(`total_${locationId}`);
+            const percentage = Math.round((totalScore / 55) * 100);
+            totalElement.innerHTML = `
+                <div>Total Score</div>
+                <div style="font-size: 1.4rem; margin-top: 5px;">${totalScore}/55</div>
+                <div style="font-size: 0.9rem; opacity: 0.9;">${percentage}%</div>
+            `;
+            
+            // Update color based on score
+            if (percentage >= 80) {
+                totalElement.style.background = 'linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)';
+            } else if (percentage >= 60) {
+                totalElement.style.background = 'linear-gradient(135deg, #f39c12 0%, #e67e22 100%)';
+            } else {
+                totalElement.style.background = 'linear-gradient(135deg, #e74c3c 0%, #c0392b 100%)';
+            }
+        }
+
+        function updateLocationName(input, locationId) {
+            // This function can be used for additional functionality if needed
+        }
+
+        // Add first location on page load
+        addLocation();
+    </script>
+</body>
+</html>
